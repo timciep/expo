@@ -3,7 +3,7 @@ import { ImageStyle as RNImageStyle, ViewProps, StyleProp, ViewStyle } from 'rea
 export type ImageSource = {
   /**
    * A string representing the resource identifier for the image,
-   * which could be an http address, a local file path, or the name of a static image resource.
+   * which could be an HTTP address, a local file path, or the name of a static image resource.
    */
   uri?: string;
   /**
@@ -14,32 +14,32 @@ export type ImageSource = {
   headers?: Record<string, string>;
   /**
    * Can be specified if known at build time, in which case the value
-   * will be used to set the default `<Image/>` component dimension
+   * will be used to set the default `<Image/>` component width.
    */
   width?: number;
   /**
    * Can be specified if known at build time, in which case the value
-   * will be used to set the default `<Image/>` component dimension
+   * will be used to set the default `<Image/>` component height.
    */
   height?: number;
 
   /**
-   * The blurhash string to use to generate the image. You can read more about the blurhash
+   * The BlurHash string to use to generate the image. You can read more about the BlurHash
    * on [`woltapp/blurhash`](https://github.com/woltapp/blurhash) repo. Ignored when `uri` is provided.
-   * When using the blurhash, you should also provide `width` and `height` (higher values reduce performance),
+   * When using the BlurHash, you should also provide `width` and `height` (higher values reduce performance),
    * otherwise their default value is `16`.
    */
   blurhash?: string;
 
   /**
-   * The thumbhash string to use to generate the image placeholder. You can read more about thumbhash
-   * on the [`thumbhash website`](https://evanw.github.io/thumbhash/). Ignored when `uri` is provided.
+   * The ThumbHash string to use to generate the image placeholder. You can read more about ThumbHash
+   * on the [`ThumbHash website`](https://evanw.github.io/thumbhash/). Ignored when `uri` is provided.
    */
   thumbhash?: string;
 
   /**
    * The cache key used to query and store this specific image.
-   * If not provided, the `uri` is used also as the cache key.
+   * If not provided, the `uri` is used as the cache key.
    */
   cacheKey?: string;
 };
@@ -97,7 +97,7 @@ export interface ImageProps extends ViewProps {
   contentFit?: ImageContentFit;
 
   /**
-   * Determines how the placeholder should be resized to fit its container
+   * Determines how the placeholder should be resized to fit its container.
    * @hidden Described in the {@link ImageProps['contentFit']}
    * @default 'scale-down'
    */
@@ -149,7 +149,7 @@ export interface ImageProps extends ViewProps {
    * - `'disk'` - Image is queried from the disk cache if exists, otherwise it's downloaded and then stored on the disk.
    *
    * - `'memory'` - Image is cached in memory. Might be useful when you render a high-resolution picture many times.
-   * Memory cache may be purged very quickly to prevent high memory usage and the risk of out of memory exceptions.
+   *   Memory cache may be purged very quickly to prevent high memory usage and the risk of out of memory exceptions.
    *
    * - `'memory-disk'` - Image is cached in memory, but with a fallback to the disk cache.
    *
@@ -248,27 +248,21 @@ export interface ImageProps extends ViewProps {
   accessible?: boolean;
 
   /**
-   * The text that's read by the screen reader when the user interacts with the image. Sets the the `alt` tag on web which is used for web crawlers and link traversal.
-   * @default undefined
-   * @platform android
-   * @platform ios
-   * @platform web
+   * The text that's read by the screen reader when the user interacts with the image. Sets the `alt` tag on web which is used for web crawlers and link traversal.
    */
   accessibilityLabel?: string;
 
   /**
-   * The text that's read by the screen reader when the user interacts with the image. Sets the the `alt` tag on web which is used for web crawlers and link traversal. Is an alias for `accessibilityLabel`.
-   *
+   * The text that's read by the screen reader when the user interacts with the image.
+   * Sets the `alt` tag on web which is used for web crawlers and link traversal.
+   * Is an alias for [`accessibilityLabel`](#accessibilitylabel).
    * @alias accessibilityLabel
-   * @default undefined
-   * @platform android
-   * @platform ios
-   * @platform web
    */
   alt?: string;
 
   /**
-   * Enables Live Text interaction with the image. Check official [Apple documentation](https://developer.apple.com/documentation/visionkit/enabling_live_text_interactions_with_images) for more details.
+   * Enables Live Text interaction with the image.
+   * Check official [Apple documentation](https://developer.apple.com/documentation/visionkit/enabling_live_text_interactions_with_images) for more details.
    * @default false
    * @platform ios 16.0+
    */
@@ -308,48 +302,42 @@ export interface ImageNativeProps extends ImageProps {
  */
 export type ImageContentPositionValue = number | string | `${number}%` | `${number}` | 'center';
 
-// eslint-disable
-// prettier-ignore
 /**
- * Specifies the position of the image inside its container. One value controls the x-axis and the second value controls the y-axis.
+ * Specifies the position of the image inside its container. One value controls the X axis and the second value controls the Y axis.
  *
- * Additionally, it supports stringified shorthand form that specifies the edges to which to align the image content:\
+ * Additionally, it supports string shorthand form that specifies the edges to which to align the image content:\
  * `'center'`, `'top'`, `'right'`, `'bottom'`, `'left'`, `'top center'`, `'top right'`, `'top left'`, `'right center'`, `'right top'`,
  * `'right bottom'`, `'bottom center'`, `'bottom right'`, `'bottom left'`, `'left center'`, `'left top'`, `'left bottom'`.\
- * If only one keyword is provided, then the other dimension is set to `'center'` (`'50%'`), so the image is placed in the middle of the specified edge.\
+ * If only one keyword is provided, then the other dimension is set to `'center'` (`'50%'`), so the image is placed in the middle of the specified edge.
+ *
  * As an example, `'top right'` is the same as `{ top: 0, right: 0 }` and `'bottom'` is the same as `{ bottom: 0, left: '50%' }`.
  */
 export type ImageContentPosition =
-  /**
+  | /**
    * An object that positions the image relatively to the top-right corner.
-   */
-  {
-    top?: ImageContentPositionValue;
-    right?: ImageContentPositionValue;
-  } |
-  /**
+   */ {
+      top?: ImageContentPositionValue;
+      right?: ImageContentPositionValue;
+    }
+  | /**
    * An object that positions the image relatively to the top-left corner.
-   */
-  {
-    top?: ImageContentPositionValue;
-    left?: ImageContentPositionValue;
-  } |
-  /**
+   */ {
+      top?: ImageContentPositionValue;
+      left?: ImageContentPositionValue;
+    }
+  | /**
    * An object that positions the image relatively to the bottom-right corner.
-   */
-  {
-    bottom?: ImageContentPositionValue;
-    right?: ImageContentPositionValue;
-  } |
-  /**
+   */ {
+      bottom?: ImageContentPositionValue;
+      right?: ImageContentPositionValue;
+    }
+  | /**
    * An object that positions the image relatively to the bottom-left corner.
-   */
-  {
-    bottom?: ImageContentPositionValue;
-    left?: ImageContentPositionValue;
-  }
+   */ {
+      bottom?: ImageContentPositionValue;
+      left?: ImageContentPositionValue;
+    }
   | ImageContentPositionString;
-// eslint-enable
 
 export interface ImageBackgroundProps extends Omit<ImageProps, 'style'> {
   /** The style of the image container */
@@ -407,10 +395,9 @@ export type ImageTransition = {
 
   /**
    * An animation effect used for transition.
-   * @default 'cross-dissolve'
-   *
    * On Android, only `'cross-dissolve'` is supported.
    * On Web, `'curl-up'` and `'curl-down'` effects are not supported.
+   * @default 'cross-dissolve'
    */
   effect?:
     | 'cross-dissolve'
@@ -423,6 +410,7 @@ export type ImageTransition = {
     | null;
 };
 
+// @docsMissing
 export type ImageLoadEventData = {
   cacheType: 'none' | 'disk' | 'memory';
   source: {
@@ -433,11 +421,13 @@ export type ImageLoadEventData = {
   };
 };
 
+// @docsMissing
 export type ImageProgressEventData = {
   loaded: number;
   total: number;
 };
 
+// @docsMissing
 export type ImageErrorEventData = {
   error: string;
 };
