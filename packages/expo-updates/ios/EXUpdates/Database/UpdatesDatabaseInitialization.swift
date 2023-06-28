@@ -21,7 +21,7 @@ enum UpdatesDatabaseInitializationError: Error {
  * Utility class that handles database initialization and migration.
  */
 internal final class UpdatesDatabaseInitialization {
-  private static let LatestFilename = "expo-v9.db"
+  private static let LatestFilename = "expo-v10.db"
   private static let LatestSchema = """
     CREATE TABLE "updates" (
       "id"  BLOB UNIQUE,
@@ -29,7 +29,7 @@ internal final class UpdatesDatabaseInitialization {
       "commit_time"  INTEGER NOT NULL,
       "runtime_version"  TEXT NOT NULL,
       "launch_asset_id" INTEGER,
-      "manifest"  TEXT,
+      "manifest"  TEXT NOT NULL,
       "status"  INTEGER NOT NULL,
       "keep"  INTEGER NOT NULL,
       "last_accessed"  INTEGER NOT NULL,

@@ -233,6 +233,55 @@ let UpdatesDatabaseV8Schema = """
   CREATE INDEX "index_json_data_scope_key" ON "json_data" ("scope_key");
 """
 
+let UpdatesDatabaseV9Schema = """
+  CREATE TABLE "updates" (
+    "id"  BLOB UNIQUE,
+    "scope_key"  TEXT NOT NULL,
+    "commit_time"  INTEGER NOT NULL,
+    "runtime_version"  TEXT NOT NULL,
+    "launch_asset_id" INTEGER,
+    "manifest"  TEXT,
+    "status"  INTEGER NOT NULL,
+    "keep"  INTEGER NOT NULL,
+    "last_accessed"  INTEGER NOT NULL,
+    "successful_launch_count"  INTEGER NOT NULL DEFAULT 0,
+    "failed_launch_count"  INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY("id"),
+    FOREIGN KEY("launch_asset_id") REFERENCES "assets"("id") ON DELETE CASCADE
+  );
+  CREATE TABLE "assets" (
+    "id"  INTEGER PRIMARY KEY AUTOINCREMENT,
+    "url"  TEXT,
+    "key"  TEXT UNIQUE,
+    "headers"  TEXT,
+    "expected_hash"  TEXT,
+    "extra_request_headers"  TEXT,
+    "type"  TEXT NOT NULL,
+    "metadata"  TEXT,
+    "download_time"  INTEGER NOT NULL,
+    "relative_path"  TEXT NOT NULL,
+    "hash"  BLOB NOT NULL,
+    "hash_type"  INTEGER NOT NULL,
+    "marked_for_deletion"  INTEGER NOT NULL
+  );
+  CREATE TABLE "updates_assets" (
+    "update_id"  BLOB NOT NULL,
+    "asset_id" INTEGER NOT NULL,
+    FOREIGN KEY("update_id") REFERENCES "updates"("id") ON DELETE CASCADE,
+    FOREIGN KEY("asset_id") REFERENCES "assets"("id") ON DELETE CASCADE
+  );
+  CREATE TABLE "json_data" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "key" TEXT NOT NULL,
+    "value" TEXT NOT NULL,
+    "last_updated" INTEGER NOT NULL,
+    "scope_key" TEXT NOT NULL
+  );
+  CREATE UNIQUE INDEX "index_updates_scope_key_commit_time" ON "updates" ("scope_key", "commit_time");
+  CREATE INDEX "index_updates_launch_asset_id" ON "updates" ("launch_asset_id");
+  CREATE INDEX "index_json_data_scope_key" ON "json_data" ("scope_key");
+"""
+
 class UpdatesDatabaseInitializationSpec : ExpoSpec {
   override func spec() {
     var testDatabaseDir: URL!
@@ -709,6 +758,10 @@ class UpdatesDatabaseInitializationSpec : ExpoSpec {
         expect(try! UpdatesDatabaseUtils.execute(sql:assetsSql2, withArgs:nil, onDatabase:migratedDb).count) == 1
         let assetsSql3 = "SELECT * FROM `assets` WHERE `id` = 4 AND `url` IS NULL AND `key` IS NULL AND `headers` IS NULL AND `type` = 'js' AND `metadata` IS NULL AND `download_time` = 1614137406588 AND `relative_path` = 'bundle-1614137401950' AND `hash` = '6ff4ee75b48a21c7a9ed98015ff6bfd0a47b94cd087c5e2258262e65af239952' AND `hash_type` = 0 AND `marked_for_deletion` = 0 AND `extra_request_headers` IS NULL AND `expected_hash` IS NULL"
         expect(try! UpdatesDatabaseUtils.execute(sql:assetsSql3, withArgs:nil, onDatabase:migratedDb).count) == 1
+      }
+
+      it("migrates 9 to 10") {
+        
       }
     }
   }
