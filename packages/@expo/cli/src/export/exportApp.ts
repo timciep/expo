@@ -55,7 +55,7 @@ export async function exportAppAsync(
   const exp = await getPublicExpoManifestAsync(projectRoot);
 
   const useWebSSG = exp.web?.output === 'static';
-
+  const assetPrefix = exp.web?.assetPrefix?.replace(/\/+$/, '') ?? '';
   const publicPath = path.resolve(projectRoot, env.EXPO_PUBLIC_FOLDER);
 
   const outputPath = path.resolve(projectRoot, outputDir);
@@ -115,19 +115,24 @@ export async function exportAppAsync(
         outputDir: outputPath,
         // TODO: Expose
         minify,
+        assetPrefix,
       });
       Log.log('Finished saving static files');
     } else {
       const cssLinks = await exportCssAssetsAsync({
         outputDir,
         bundles,
+        assetPrefix,
       });
       let html = await createTemplateHtmlFromExpoConfigAsync(projectRoot, {
-        scripts: [`/bundles/${fileNames.web}`],
+        scripts: [`${assetPrefix}/bundles/${fileNames.web}`],
         cssLinks,
       });
       // Add the favicon assets to the HTML.
-      const modifyHtml = await getVirtualFaviconAssetsAsync(projectRoot, outputDir);
+      const modifyHtml = await getVirtualFaviconAssetsAsync(projectRoot, {
+        outputDir,
+        assetPrefix,
+      });
       if (modifyHtml) {
         html = modifyHtml(html);
       }
@@ -137,6 +142,7 @@ export async function exportAppAsync(
     }
 
     // Save assets like a typical bundler, preserving the file paths on web.
+    // TODO: Apply assetPrefix to the assets.
     const saveAssets = importCliSaveAssetsFromProject(projectRoot);
     await Promise.all(
       Object.entries(bundles).map(([platform, bundle]) => {

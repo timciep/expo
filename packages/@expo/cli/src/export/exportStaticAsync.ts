@@ -19,7 +19,7 @@ import { getVirtualFaviconAssetsAsync } from './favicon';
 
 const debug = require('debug')('expo:export:generateStaticRoutes') as typeof console.log;
 
-type Options = { outputDir: string; minify: boolean };
+type Options = { outputDir: string; minify: boolean; assetPrefix: string };
 
 /** @private */
 export async function unstable_exportStaticAsync(projectRoot: string, options: Options) {
@@ -82,9 +82,12 @@ export async function getFilesToExportFromServerAsync(
 export async function exportFromServerAsync(
   projectRoot: string,
   devServerManager: DevServerManager,
-  { outputDir, minify }: Options
+  { outputDir, assetPrefix, minify }: Options
 ): Promise<void> {
-  const injectFaviconTag = await getVirtualFaviconAssetsAsync(projectRoot, outputDir);
+  const injectFaviconTag = await getVirtualFaviconAssetsAsync(projectRoot, {
+    assetPrefix,
+    outputDir,
+  });
 
   const devServer = devServerManager.getDefaultDevServer();
   assert(devServer instanceof MetroBundlerDevServer);
@@ -108,6 +111,7 @@ export async function exportFromServerAsync(
         mode: 'production',
         resources,
         template,
+        assetPrefix,
       });
 
       if (injectFaviconTag) {
