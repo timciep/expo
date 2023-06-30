@@ -24,7 +24,7 @@ export function persistMetroAssetsAsync(
         return;
       }
       const src = asset.files[idx];
-      const dest = path.join(outputDirectory, getAssetDestPathIOS(asset, { scale, assetPrefix }));
+      const dest = path.join(outputDirectory, getAssetLocalPath(asset, { scale, assetPrefix }));
       acc[src] = dest;
     });
     return acc;
@@ -99,7 +99,7 @@ function filterPlatformAssetScales(platform: string, scales: readonly number[]):
   return result;
 }
 
-function getAssetDestPathIOS(
+function getAssetLocalPath(
   asset: AssetDataWithoutFiles,
   { assetPrefix, scale }: { assetPrefix?: string; scale: number }
 ): string {
