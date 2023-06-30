@@ -55,7 +55,7 @@ function getAssetPlugins(projectRoot: string): string[] {
     throw new Error(`The required package \`expo-asset\` cannot be found`);
   }
 
-  return [path.resolve(__dirname, './asset-prefix-asset-plugin.js'), hashAssetFilesPath];
+  return [hashAssetFilesPath];
 }
 
 let hasWarnedAboutExotic = false;
