@@ -75,6 +75,12 @@ export async function bundleAsync(
     exp: expoConfig,
   });
 
+  if (expoConfig.assetPrefix) {
+    // config.transformer.publicPath = expoConfig.web?.assetPrefix;
+    process.env._EXPO_METRO_ASSET_PREFIX = expoConfig.assetPrefix;
+    console.log('bundle:', process.env._EXPO_METRO_ASSET_PREFIX);
+  }
+
   const metroServer = await metro.runMetro(config, {
     watch: false,
   });

@@ -51,6 +51,12 @@ export async function loadMetroConfigAsync(
   const ExpoMetroConfig = importExpoMetroConfig(projectRoot);
   let config = await ExpoMetroConfig.loadAsync(projectRoot, { reporter, ...options });
 
+  if (exp.assetPrefix) {
+    // config.transformer.publicPath = exp.assetPrefix;
+    process.env._EXPO_METRO_ASSET_PREFIX = exp.assetPrefix;
+    console.log('start:', process.env._EXPO_METRO_ASSET_PREFIX);
+  }
+
   const platformBundlers = getPlatformBundlers(exp);
 
   config = await withMetroMultiPlatformAsync(projectRoot, {

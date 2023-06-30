@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 
 import * as Log from '../log';
-import { importCliSaveAssetsFromProject } from '../start/server/metro/resolveFromProject';
 import { createTemplateHtmlFromExpoConfigAsync } from '../start/server/webTemplate';
 import { copyAsync, ensureDirectoryAsync } from '../utils/dir';
 import { env } from '../utils/env';
@@ -12,6 +11,7 @@ import { exportAssetsAsync, exportCssAssetsAsync } from './exportAssets';
 import { unstable_exportStaticAsync } from './exportStaticAsync';
 import { getVirtualFaviconAssetsAsync } from './favicon';
 import { getPublicExpoManifestAsync } from './getPublicExpoManifest';
+import { persistMetroAssetsAsync } from './persistMetroAssets';
 import { printBundleSizes } from './printBundleSizes';
 import { Options } from './resolveOptions';
 import {
@@ -55,7 +55,7 @@ export async function exportAppAsync(
   const exp = await getPublicExpoManifestAsync(projectRoot);
 
   const useWebSSG = exp.web?.output === 'static';
-  const assetPrefix = exp.web?.assetPrefix?.replace(/\/+$/, '') ?? '';
+  const assetPrefix = exp.assetPrefix?.replace(/\/+$/, '') ?? '';
   const publicPath = path.resolve(projectRoot, env.EXPO_PUBLIC_FOLDER);
 
   const outputPath = path.resolve(projectRoot, outputDir);
@@ -141,14 +141,15 @@ export async function exportAppAsync(
       await fs.promises.writeFile(path.join(staticFolder, 'index.html'), html);
     }
 
-    // Save assets like a typical bundler, preserving the file paths on web.
-    // TODO: Apply assetPrefix to the assets.
-    const saveAssets = importCliSaveAssetsFromProject(projectRoot);
-    await Promise.all(
-      Object.entries(bundles).map(([platform, bundle]) => {
-        return saveAssets(bundle.assets, platform, staticFolder, undefined);
-      })
-    );
+    if (bundles.web) {
+      // Save assets like a typical bundler, preserving the file paths on web.
+      // TODO: Update React Native Web to support loading files from asset hashes.
+      await persistMetroAssetsAsync(bundles.web.assets, {
+        platform: 'web',
+        outputDirectory: staticFolder,
+        assetPrefix,
+      });
+    }
   }
 
   const { assets } = await exportAssetsAsync(projectRoot, {
