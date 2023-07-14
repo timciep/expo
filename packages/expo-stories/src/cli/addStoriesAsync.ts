@@ -1,10 +1,10 @@
 import fse from 'fs-extra';
 import path from 'path';
 
-import { StoryFile, StoryManifest } from '../types';
 import { saveManifestAsync } from './saveManifestAsync';
 import { getStoryManifest, hashPath } from './shared';
 import { writeStoriesAsync } from './writeStoriesAsync';
+import { StoryFile, StoryManifest } from '../types';
 
 export async function addStoriesAsync(
   relPaths: string[],

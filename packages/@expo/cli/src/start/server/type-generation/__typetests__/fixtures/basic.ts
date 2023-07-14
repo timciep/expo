@@ -177,16 +177,16 @@ export declare const Link: LinkComponent;
  ************/
 export declare function useRouter(): Router;
 export declare function useLocalSearchParams<
-  T extends DynamicRouteTemplate | StaticRoutes | RelativePathString
+  T extends DynamicRouteTemplate | StaticRoutes | RelativePathString,
 >(): SearchParams<T>;
 export declare function useSearchParams<
-  T extends AllRoutes | SearchParams<DynamicRouteTemplate>
+  T extends AllRoutes | SearchParams<DynamicRouteTemplate>,
 >(): T extends AllRoutes ? SearchParams<T> : T;
 
 export declare function useGlobalSearchParams<
-  T extends AllRoutes | SearchParams<DynamicRouteTemplate>
+  T extends AllRoutes | SearchParams<DynamicRouteTemplate>,
 >(): T extends AllRoutes ? SearchParams<T> : T;
 
 export declare function useSegments<
-  T extends AbsoluteRoute | RouteSegments<AbsoluteRoute> | RelativePathString
+  T extends AbsoluteRoute | RouteSegments<AbsoluteRoute> | RelativePathString,
 >(): T extends AbsoluteRoute ? RouteSegments<T> : T extends string ? string[] : T;

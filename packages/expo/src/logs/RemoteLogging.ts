@@ -3,8 +3,8 @@ import { Platform, uuidv4 } from 'expo-modules-core';
 import { EventEmitter, EventSubscription } from 'fbemitter';
 import invariant from 'invariant';
 
-import getInstallationIdAsync from '../environment/getInstallationIdAsync';
 import LogSerialization from './LogSerialization';
+import getInstallationIdAsync from '../environment/getInstallationIdAsync';
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
