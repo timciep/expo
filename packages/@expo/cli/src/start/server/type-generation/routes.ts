@@ -454,18 +454,18 @@ declare module "expo-router" {
    ************/
   export function useRouter(): Router;
   export function useLocalSearchParams<
-    T extends DynamicRouteTemplate | StaticRoutes | RelativePathString
+    T extends DynamicRouteTemplate | StaticRoutes | RelativePathString,
   >(): SearchParams<T>;
   export function useSearchParams<
-    T extends AllRoutes | SearchParams<DynamicRouteTemplate>
+    T extends AllRoutes | SearchParams<DynamicRouteTemplate>,
   >(): T extends AllRoutes ? SearchParams<T> : T;
 
   export function useGlobalSearchParams<
-    T extends AllRoutes | SearchParams<DynamicRouteTemplate>
+    T extends AllRoutes | SearchParams<DynamicRouteTemplate>,
   >(): T extends AllRoutes ? SearchParams<T> : T;
 
   export function useSegments<
-    T extends AbsoluteRoute | RouteSegments<AbsoluteRoute> | RelativePathString
+    T extends AbsoluteRoute | RouteSegments<AbsoluteRoute> | RelativePathString,
   >(): T extends AbsoluteRoute ? RouteSegments<T> : T extends string ? string[] : T;
 }
 `;
