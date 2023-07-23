@@ -1,11 +1,16 @@
 import ExpoModulesCore
-import SQLite3
+//import SQLite3
+import sqlite3
 
 public final class SQLiteModule: Module {
   private var cachedDatabases = [String: OpaquePointer]()
 
   public func definition() -> ModuleDefinition {
     Name("ExpoSQLite")
+
+    OnCreate {
+      crsqlite_init_from_swift()
+    }
 
     AsyncFunction("exec") { (dbName: String, queries: [[Any]], readOnly: Bool) -> [Any?] in
       guard let db = openDatabase(dbName: dbName) else {
