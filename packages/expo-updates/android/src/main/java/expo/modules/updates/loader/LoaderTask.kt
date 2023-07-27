@@ -60,8 +60,12 @@ class LoaderTask(
       ROLL_BACK_TO_EMBEDDED
     }
 
-    class NoUpdateAvailable : RemoteCheckResult(Status.NO_UPDATE_AVAILABLE)
+    // No update available. If an update is passed in, a manifest was received but it is already
+    // on the device and not launchable
+    class NoUpdateAvailable(val invalidLaunchedUpdate: UpdateEntity? = null) : RemoteCheckResult(Status.NO_UPDATE_AVAILABLE)
+    // New launchable update available
     class UpdateAvailable(val manifest: JSONObject) : RemoteCheckResult(Status.UPDATE_AVAILABLE)
+    // Rollback directive received
     class RollBackToEmbedded : RemoteCheckResult(Status.ROLL_BACK_TO_EMBEDDED)
   }
 
@@ -366,7 +370,7 @@ class LoaderTask(
               Loader.OnUpdateResponseLoadedResult(shouldDownloadManifestIfPresentInResponse = true)
             } else {
               isUpToDate = true
-              callback.onRemoteCheckForUpdateFinished(RemoteCheckResult.NoUpdateAvailable())
+              callback.onRemoteCheckForUpdateFinished(RemoteCheckResult.NoUpdateAvailable(updateManifest.updateEntity))
               Loader.OnUpdateResponseLoadedResult(shouldDownloadManifestIfPresentInResponse = false)
             }
           }
