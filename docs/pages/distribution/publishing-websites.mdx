@@ -224,6 +224,16 @@ Install the [Vercel CLI](https://vercel.com/docs/cli).
 </Step>
 
 <Step label="3">
+  If you have prebuilt your application, you should create a **.vercelignore** file at the root of your app and add the following:
+
+  ```txt .vercelignore
+    android/
+    ios/
+    node_modules/
+  ```
+</Step>
+
+<Step label="4">
   Deploy the website.
   
   <Terminal cmd={['$ vercel']} />
